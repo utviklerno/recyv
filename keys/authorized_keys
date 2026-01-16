@@ -1,1 +1,0 @@
-command="/app/receive_data.sh",no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEjCkj7fkzRGtPFs6x3mRAr8bEMomcx3caWd8pfKBo4n diskmon-client
