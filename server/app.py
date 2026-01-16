@@ -131,8 +131,13 @@ class DiskMonHandler(http.server.SimpleHTTPRequestHandler):
 
 def run():
     load_data()
-    print(f"Starting server on port {PORT}")
-    print(f"API_KEY: {API_KEY}")
+    print("-" * 50)
+    print(f"DiskMon Server Running")
+    print("-" * 50)
+    print(f"Port:       {PORT}")
+    print(f"API Key:    {API_KEY}")
+    print(f"URL format: http://<YOUR_HOST_IP>:{PORT}/api/upload")
+    print("-" * 50)
     with socketserver.TCPServer(("", PORT), DiskMonHandler) as httpd:
         httpd.serve_forever()
 
