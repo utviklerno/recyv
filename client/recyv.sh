@@ -9,10 +9,12 @@ ID_FILE="/root/.ssh/diskmon.key"
 # Handle --install-cron
 if [ "$1" == "--install-cron" ]; then
     echo "Setting up cron job..."
-    CRON_CMD="* * * * * /root/diskmon.sh > /dev/null 2>&1"
+    # Self-reference logic: Use actual path of this script
+    SCRIPT_PATH=$(readlink -f "$0")
+    CRON_CMD="* * * * * $SCRIPT_PATH > /dev/null 2>&1"
     
     # Check if exists
-    if crontab -l 2>/dev/null | grep -qF "/root/diskmon.sh"; then
+    if crontab -l 2>/dev/null | grep -qF "$SCRIPT_PATH"; then
         echo "Cron job already exists."
     else
         (crontab -l 2>/dev/null; echo "$CRON_CMD") | crontab -

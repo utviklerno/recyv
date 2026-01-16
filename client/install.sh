@@ -9,10 +9,10 @@ BRANCH="main"
 # ==========================================
 
 REPO_URL="https://raw.githubusercontent.com/$GITHUB_USER/$REPO_NAME/$BRANCH"
-TARGET_FILE="/root/diskmon.sh"
-KEY_FILE="/root/.ssh/diskmon.key"
+TARGET_FILE="/root/recyv.sh"
+KEY_FILE="/root/.ssh/recyv.key"
 
-echo "Installing DiskMon Client..."
+echo "Installing Recyv Client..."
 
 # Check root
 if [ "$EUID" -ne 0 ]; then 
@@ -68,16 +68,25 @@ mkdir -p /root/.ssh
 echo "$INPUT_KEY" > "$KEY_FILE"
 chmod 600 "$KEY_FILE"
 
-# Download diskmon script
-echo "Downloading diskmon.sh from $REPO_URL..."
-curl -sL "$REPO_URL/client/diskmon.sh" -o "$TARGET_FILE"
+# Download recyv script
+# Updated filename to recyv.sh
+echo "Downloading recyv.sh from $REPO_URL..."
+curl -sL "$REPO_URL/client/recyv.sh" -o "$TARGET_FILE"
 
 if [ ! -s "$TARGET_FILE" ]; then
-    echo "Error: Failed to download diskmon.sh."
+    echo "Error: Failed to download recyv.sh."
     exit 1
 fi
 
-# Configure diskmon script
+# Check if file is a 404 HTML page (common error)
+if grep -q "<html" "$TARGET_FILE" || grep -q "404: Not Found" "$TARGET_FILE"; then
+    echo "Error: Downloaded file seems to be an HTML page (likely 404 Not Found)."
+    echo "URL attempted: $REPO_URL/client/recyv.sh"
+    rm "$TARGET_FILE"
+    exit 1
+fi
+
+# Configure recyv script
 echo "Configuring $TARGET_FILE..."
 # Escape logic for sed is tricky with special chars in variables.
 # We will read file, replace line, write file.
@@ -88,7 +97,7 @@ chmod +x "$TARGET_FILE"
 
 echo "Installation complete."
 echo "Testing connection..."
-/root/diskmon.sh > /dev/null 2>&1
+"$TARGET_FILE" > /dev/null 2>&1
 if [ $? -eq 0 ]; then
     echo "Connection test passed (or at least didn't crash)."
 else
@@ -102,5 +111,5 @@ echo "Setting up cron job..."
 echo ""
 echo "----------------------------------------------------------------"
 echo "SUCCESS!"
-echo "DiskMon client is now installed and running."
+echo "Recyv client is now installed and running."
 echo "----------------------------------------------------------------"
