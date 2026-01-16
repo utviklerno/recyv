@@ -72,6 +72,8 @@ On the machine you want to monitor (requires root):
 If you need to access the dashboard or send data from outside your local network (DMZ), we highly recommend using **Tailscale**. It creates a secure, private network between your devices without exposing ports to the public internet.
 
 ### 1. Install Tailscale on the Server
+> **Note:** You need a [Tailscale account](https://tailscale.com) (free for personal use) before proceeding.
+
 On your Docker host machine:
 ```bash
 curl -fsSL https://tailscale.com/install.sh | sh
