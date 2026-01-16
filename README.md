@@ -11,8 +11,8 @@ A simple, lightweight disk monitoring tool for Linux based on Docker and Python.
 
 1.  Clone the repository:
     ```bash
-    git clone https://github.com/YOUR_GITHUB_USER/diskmon.git
-    cd diskmon
+    git clone https://github.com/utviklerno/recyv.git
+    cd recyv
     ```
 
 2.  Configure and start the server:
@@ -33,10 +33,10 @@ To install the monitoring client on a Linux host:
 1.  **Run the installer via curl:**
 
     ```bash
-    curl -sL https://raw.githubusercontent.com/YOUR_GITHUB_USER/diskmon/main/client/install.sh | sudo bash
+    curl -sL https://raw.githubusercontent.com/utviklerno/recyv/main/client/install.sh | sudo bash
     ```
 
-    *Note: Replace `YOUR_GITHUB_USER` with your actual GitHub username.*
+    *Note: Replace `utviklerno` with your actual GitHub username.*
 
 2.  **Configure the client:**
     

@@ -3,8 +3,8 @@
 # ==========================================
 # Configuration - UPDATE THIS BEFORE PUSHING TO GITHUB
 # ==========================================
-GITHUB_USER="YOUR_GITHUB_USER"
-REPO_NAME="diskmon"
+GITHUB_USER="utviklerno"
+REPO_NAME="recyv"
 BRANCH="main"
 # ==========================================
 
