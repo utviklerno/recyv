@@ -238,7 +238,7 @@
                 
                 const container = document.getElementById('app');
                 const machines = json.machines || {};
-                
+                console.log(machines); 
                 document.getElementById('last-update').innerText = 'Updated: ' + new Date().toLocaleTimeString();
 
                 if (Object.keys(machines).length === 0) {
