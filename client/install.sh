@@ -12,13 +12,6 @@ REPO_URL="https://raw.githubusercontent.com/$GITHUB_USER/$REPO_NAME/$BRANCH"
 TARGET_FILE="/root/recyv.sh"
 KEY_FILE="/root/.ssh/recyv.key"
 
-# Check for verbose flag
-VERBOSE=0
-if [ "$1" == "-v" ] || [ "$1" == "--verbose" ]; then
-    VERBOSE=1
-    echo "Verbose mode enabled."
-fi
-
 echo "Installing Recyv Client..."
 
 # Check root
@@ -104,13 +97,8 @@ chmod +x "$TARGET_FILE"
 echo "Installation complete."
 echo "Testing connection..."
 
-if [ "$VERBOSE" -eq 1 ]; then
-    # Run with output
-    "$TARGET_FILE"
-else
-    # Run silently
-    "$TARGET_FILE" > /dev/null 2>&1
-fi
+# Run silently
+"$TARGET_FILE" > /dev/null 2>&1
 
 if [ $? -eq 0 ]; then
     echo "Connection test passed."
