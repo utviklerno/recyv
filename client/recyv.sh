@@ -89,7 +89,8 @@ except Exception as e:
     # Send data via SSH
     # Debug mode if interactive
     if [ -t 1 ]; then
-        echo "$PAYLOAD" | ssh -v -i "$ID_FILE" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SSH_TARGET
+        # Removed -v flag for clean output
+        echo "$PAYLOAD" | ssh -i "$ID_FILE" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SSH_TARGET
         SSH_EXIT=$?
     else
         # Silent mode for cron
