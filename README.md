@@ -65,6 +65,12 @@ On the machine you want to monitor (requires root):
 
 3.  **Done!** The installer sets up a cron job that runs every minute.
 
+    *Note: To change the schedule (e.g., to run hourly), edit the cron job manually:*
+    ```bash
+    crontab -e
+    ```
+    *Change `* * * * *` to `@hourly` or `0 * * * *`.*
+
 ---
 
 ## Secure Remote Access (Tailscale)
