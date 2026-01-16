@@ -1,4 +1,4 @@
-# DiskMon
+# Recyv Disk Monitor
 
 A simple, lightweight disk monitoring tool for Linux based on Docker and Python.
 
@@ -15,16 +15,15 @@ A simple, lightweight disk monitoring tool for Linux based on Docker and Python.
     cd recyv
     ```
 
-2.  Generate SSH Keys:
-    ```bash
-    ./genkeys.sh
-    ```
-    This will create a `keys` directory with server host keys and a client access key.
-    **Note:** The content of `keys/client_key` is the private key you need for your clients.
-
-3.  Configure and start the server:
+2.  Configure and start the server:
     ```bash
     docker-compose up -d --build
+    ```
+    
+    The container will automatically generate SSH keys in the `./keys` directory if they don't exist.
+    Check the logs to get the **Client Private Key**:
+    ```bash
+    docker-compose logs
     ```
 
 The dashboard will be available at `http://localhost:8080`.
@@ -44,8 +43,8 @@ On the client machine (the host you want to monitor):
 
     The script will:
     1.  Install dependencies.
-    2.  Ask for your **Server SSH Address** (e.g. `diskmon@192.168.1.50 -p 2222`).
-    3.  Ask you to paste the **Client Private Key** (from `keys/client_key` on the server).
+    2.  Ask for your **Server SSH Address** (e.g. `recyv@192.168.1.50 -p 2222`).
+    3.  Ask you to paste the **Client Private Key** (copied from server logs).
     4.  Configure the client script and cron job.
 
 ## API Usage

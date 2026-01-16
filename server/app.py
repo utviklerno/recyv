@@ -54,7 +54,7 @@ def save_data():
     except Exception as e:
         print(f"Error saving data: {e}")
 
-class DiskMonHandler(http.server.SimpleHTTPRequestHandler):
+class RecyvHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         parsed_path = urlparse(self.path)
         path = parsed_path.path
@@ -163,13 +163,13 @@ class DiskMonHandler(http.server.SimpleHTTPRequestHandler):
 def run():
     load_data()
     print("-" * 50)
-    print(f"DiskMon Server Running")
+    print(f"Recyv Server Running")
     print("-" * 50)
     print(f"Port:       {PORT}")
     print(f"API Key:    {API_KEY}")
     print(f"URL format: http://<YOUR_HOST_IP>:{PORT}/api/upload")
     print("-" * 50)
-    with socketserver.TCPServer(("", PORT), DiskMonHandler) as httpd:
+    with socketserver.TCPServer(("", PORT), RecyvHandler) as httpd:
         httpd.serve_forever()
 
 if __name__ == "__main__":

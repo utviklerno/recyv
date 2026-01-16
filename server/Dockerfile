@@ -5,14 +5,14 @@ WORKDIR /app
 # Install OpenSSH Server and curl
 RUN apk add --no-cache openssh curl
 
-# Create diskmon user
-RUN adduser -D -s /bin/sh diskmon \
-    && mkdir -p /home/diskmon/.ssh \
-    && chmod 700 /home/diskmon/.ssh \
-    && chown diskmon:diskmon /home/diskmon/.ssh
+# Create recyv user
+RUN adduser -D -s /bin/sh recyv \
+    && mkdir -p /home/recyv/.ssh \
+    && chmod 700 /home/recyv/.ssh \
+    && chown recyv:recyv /home/recyv/.ssh
 
-# Unlock diskmon user (needed for key auth sometimes depending on PAM, but usually fine)
-RUN passwd -u diskmon
+# Unlock recyv user
+RUN passwd -u recyv
 
 COPY app.py .
 COPY static ./static

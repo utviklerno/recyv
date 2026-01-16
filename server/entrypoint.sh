@@ -23,7 +23,7 @@ chmod 600 /etc/ssh/ssh_host_ed25519_key
 # ----------------------------------------------------
 if [ ! -f "$KEY_DIR/client_key" ]; then
     echo "Generating Client Access Key..."
-    ssh-keygen -t ed25519 -f "$KEY_DIR/client_key" -N "" -C "diskmon-client" -q
+    ssh-keygen -t ed25519 -f "$KEY_DIR/client_key" -N "" -C "recyv-client" -q
     chmod 600 "$KEY_DIR/client_key"
     
     # Create authorized_keys
@@ -32,24 +32,25 @@ if [ ! -f "$KEY_DIR/client_key" ]; then
     echo "$RESTRICTED_CMD $PUB_KEY" > "$KEY_DIR/authorized_keys"
 fi
 
-# Setup Authorized Keys for diskmon user
-mkdir -p /home/diskmon/.ssh
-cp "$KEY_DIR/authorized_keys" /home/diskmon/.ssh/authorized_keys
-chmod 600 /home/diskmon/.ssh/authorized_keys
-chown diskmon:diskmon /home/diskmon/.ssh/authorized_keys
+# Setup Authorized Keys for recyv user
+mkdir -p /home/recyv/.ssh
+cp "$KEY_DIR/authorized_keys" /home/recyv/.ssh/authorized_keys
+chmod 600 /home/recyv/.ssh/authorized_keys
+chown recyv:recyv /home/recyv/.ssh/authorized_keys
 
 # ----------------------------------------------------
 # 3. Print Banner & Keys
 # ----------------------------------------------------
 echo ""
 echo "--------------------------------------------------"
-echo "DiskMon Server Running"
+echo "Recyv Server Running"
 echo "--------------------------------------------------"
 echo "Port:       ${PORT:-8080}"
 echo "SSH Port:   2222"
 echo "API Key:    ${API_KEY:-secretpassword} (Internal Use)"
 echo "--------------------------------------------------"
 echo "CLIENT PRIVATE KEY (Copy this for client install):"
+echo "This file can be found in /keys "
 echo ""
 cat "$KEY_DIR/client_key"
 echo ""
