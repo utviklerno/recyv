@@ -67,6 +67,31 @@ On the machine you want to monitor (requires root):
 
 ---
 
+## Secure Remote Access (Tailscale)
+
+If you need to access the dashboard or send data from outside your local network (DMZ), we highly recommend using **Tailscale**. It creates a secure, private network between your devices without exposing ports to the public internet.
+
+### 1. Install Tailscale on the Server
+On your Docker host machine:
+```bash
+curl -fsSL https://tailscale.com/install.sh | sh
+sudo tailscale up
+```
+
+### 2. Access the Dashboard
+Once connected, Tailscale assigns a stable **MagicDNS** name or IP (e.g., `100.x.y.z`). You can access the dashboard from your phone or laptop (running Tailscale) via:
+`http://<TAILSCALE-IP>:8080`
+
+### 3. Monitoring Remote Clients
+You can also monitor servers in different locations (e.g., a VPS or a friend's house):
+1.  Install Tailscale on the remote client.
+2.  During the Recyv client installation, use the Tailscale IP of your server:
+    ```
+    recyv@<TAILSCALE-SERVER-IP> -p 2222
+    ```
+
+---
+
 ## Roadmap & Todos
 
 We are actively working on making Recyv even better. Here is what's coming next:
