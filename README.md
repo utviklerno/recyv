@@ -26,6 +26,9 @@ A simple, lightweight disk monitoring tool for Linux based on Docker and Python.
 
 The dashboard will be available at `http://localhost:8080`.
 
+### Data Persistence
+The server stores disk data in JSON format in the `./data` directory on the host machine. This ensures data is preserved even if the container is recreated.
+
 ## Client Installation
 
 To install the monitoring client on a Linux host:
