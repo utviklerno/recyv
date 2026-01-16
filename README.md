@@ -1,5 +1,7 @@
 # Recyv Disk Monitor
 
+![Recyv Dashboard](recyvdash.png)
+
 A simple, lightweight disk monitoring tool for Linux based on Docker and Python.
 
 ## Features
