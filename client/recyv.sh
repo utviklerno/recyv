@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Ensure PATH is set for Cron
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
 # Configuration
 SSH_TARGET="diskmon@localhost -p 2222"
 ID_FILE="/root/.ssh/diskmon.key"
