@@ -10,4 +10,4 @@ services:
     restart: unless-stopped
     volumes:
       - ./data:/app/data
-      - ./keys:/keys:ro
+      - ./keys:/keys
