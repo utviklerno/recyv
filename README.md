@@ -1,9 +1,8 @@
 # Recyv
-Super lightweight disk monitor.
 
 ![Recyv Dashboard](recyvdash.png)
 
-**Recyv** is a minimalist, secure, and resilient disk monitoring solution designed for home labs, server farms, and privacy-conscious users. It decouples data collection from data visualization using a unique SSH-based transport mechanism.
+**Recyv** is a minimalist, secure, and resilient disk monitoring solution designed for home labs, server farms, and privacy-conscious users. It is based on **Docker** and runs a **super lightweight web server** to display vital data. It decouples data collection from data visualization using a unique SSH-based transport mechanism.
 
 ## Why is this solution "Cool"?
 
