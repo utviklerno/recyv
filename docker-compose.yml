@@ -3,9 +3,11 @@ services:
     build: ./server
     ports:
       - "${PORT:-8080}:8080"
+      - "${SSH_PORT:-2222}:2222"
     environment:
       - PORT=8080
       - API_KEY=${API_KEY:-secretpassword}
     restart: unless-stopped
     volumes:
       - ./data:/app/data
+      - ./keys:/keys:ro
