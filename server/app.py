@@ -15,15 +15,6 @@ DATA_FILE = os.path.join(DATA_DIR, 'disks.json')
 INBOX_DIR = os.path.join(DATA_DIR, 'inbox')
 
 # In-memory store for disk data
-# New Structure:
-# {
-#   "machines": {
-#     "IP_HOSTNAME": {
-#       "info": { ... },
-#       "disks": { "dev": { ... } }
-#     }
-#   }
-# }
 DISK_DATA = {
     "machines": {}
 }
@@ -81,10 +72,6 @@ def process_inbox():
                         with open(file_path, 'r') as f:
                             data = json.load(f)
                         
-                        # Data types:
-                        # 1. Disk: { "type": "disk", "machine_id": "...", "device": "...", "smart_data": ... }
-                        # 2. Info: { "type": "system_info", "machine_id": "...", "info": ... }
-                        
                         machine_id = data.get('machine_id')
                         msg_type = data.get('type')
                         
@@ -95,21 +82,18 @@ def process_inbox():
                             
                             machine_node = DISK_DATA['machines'][machine_id]
                             
+                            # Always update last_seen for any activity from this machine
+                            machine_node['info']['last_seen'] = int(time.time())
+                            changes_made = True
+                            
                             if msg_type == 'disk':
                                 device = data.get('device')
                                 if device:
                                     machine_node['disks'][device] = data.get('smart_data')
-                                    changes_made = True
                                     
                             elif msg_type == 'system_info':
-                                # Update info node
-                                # Merge existing info with new info to preserve keys if needed
-                                # But usually system info is a full snapshot.
                                 new_info = data.get('info', {})
-                                # Always update last_seen
-                                new_info['last_seen'] = int(time.time())
                                 machine_node['info'].update(new_info)
-                                changes_made = True
                         
                         os.remove(file_path)
                         
@@ -141,6 +125,21 @@ class RecyvHandler(http.server.SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps(DISK_DATA).encode())
             return
 
+        if path.startswith('/api/disks/'):
+            match = re.match(r'^/api/disks/(.+)$', path)
+            if match:
+                disk_id = match.group(1)
+                with DATA_LOCK:
+                    disks = DISK_DATA.get('disks', {})
+                    if disk_id in disks:
+                        self.send_response(200)
+                        self.send_header('Content-type', 'application/json')
+                        self.end_headers()
+                        self.wfile.write(json.dumps(disks[disk_id]).encode())
+                        return
+                self.send_error(404, "Disk not found")
+                return
+
         if path == '/api/ping':
             self.send_response(200)
             self.send_header('Content-type', 'application/json')
@@ -162,7 +161,6 @@ class RecyvHandler(http.server.SimpleHTTPRequestHandler):
         self.send_error(404, "Not Found")
 
     def do_POST(self):
-        # API Upload disabled in favor of SSH
         self.send_error(404, "Not Found")
 
 def run():
