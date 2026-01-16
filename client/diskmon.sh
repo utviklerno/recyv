@@ -102,10 +102,10 @@ do
     PAYLOAD=$(python3 -c "import json, sys; 
 try:
     data = json.loads(sys.argv[1]); 
-    print(json.dumps({'id': sys.argv[2], 'device': sys.argv[3], 'smart_data': data}))
+    print(json.dumps({'id': sys.argv[2], 'device': sys.argv[3], 'hostname': sys.argv[4], 'smart_data': data}))
 except Exception as e:
     print('')
-" "$SMART_DATA" "$ID" "$DEVICE")
+" "$SMART_DATA" "$ID" "$DEVICE" "$HOSTNAME")
 
     if [ -z "$PAYLOAD" ]; then
         echo "Error constructing JSON payload for $DEVICE"

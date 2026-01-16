@@ -3,6 +3,7 @@ import socketserver
 import json
 import os
 import re
+import time
 from urllib.parse import urlparse
 
 # Configuration
@@ -12,18 +13,35 @@ DATA_DIR = '/app/data'
 DATA_FILE = os.path.join(DATA_DIR, 'disks.json')
 
 # In-memory store for disk data
-DISK_DATA = {}
+# New Structure: { "logs": { "hostname": timestamp }, "disks": { "disk_id": data } }
+DISK_DATA = {
+    "logs": {},
+    "disks": {}
+}
 
 def load_data():
     global DISK_DATA
     if os.path.exists(DATA_FILE):
         try:
             with open(DATA_FILE, 'r') as f:
-                DISK_DATA = json.load(f)
-            print(f"Loaded {len(DISK_DATA)} records from {DATA_FILE}")
+                loaded_data = json.load(f)
+            
+            # Migration/Validation logic
+            if "disks" in loaded_data and "logs" in loaded_data:
+                # Correct structure
+                DISK_DATA = loaded_data
+            else:
+                # Legacy structure: Assume the whole file is just disk entries
+                print("Migrating legacy data structure...")
+                DISK_DATA = {
+                    "logs": {},
+                    "disks": loaded_data
+                }
+            
+            print(f"Loaded {len(DISK_DATA.get('disks', {}))} disks from {DATA_FILE}")
         except Exception as e:
             print(f"Error loading data: {e}")
-            DISK_DATA = {}
+            DISK_DATA = { "logs": {}, "disks": {} }
     else:
         print("No existing data found. Starting fresh.")
 
@@ -41,7 +59,7 @@ class DiskMonHandler(http.server.SimpleHTTPRequestHandler):
         parsed_path = urlparse(self.path)
         path = parsed_path.path
 
-        # Serve API: All disks
+        # Serve API: All Data (Root Object)
         if path == '/api/disks':
             self.send_response(200)
             self.send_header('Content-type', 'application/json')
@@ -54,11 +72,12 @@ class DiskMonHandler(http.server.SimpleHTTPRequestHandler):
         match = re.match(r'^/api/disks/(.+)$', path)
         if match:
             disk_id = match.group(1)
-            if disk_id in DISK_DATA:
+            disks = DISK_DATA.get('disks', {})
+            if disk_id in disks:
                 self.send_response(200)
                 self.send_header('Content-type', 'application/json')
                 self.end_headers()
-                self.wfile.write(json.dumps(DISK_DATA[disk_id]).encode())
+                self.wfile.write(json.dumps(disks[disk_id]).encode())
             else:
                 self.send_error(404, "Disk not found")
             return
@@ -110,13 +129,25 @@ class DiskMonHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_error(400, f"Bad Request: {str(e)}")
                 return
 
-            # Update Data
+            # Validate ID
             if 'id' not in data:
                 self.send_error(400, "Missing 'id' field in JSON")
                 return
             
             disk_id = data['id']
-            DISK_DATA[disk_id] = data
+            hostname = data.get('hostname')
+
+            # Update Disks
+            DISK_DATA['disks'][disk_id] = data
+
+            # Update Logs
+            if hostname:
+                DISK_DATA['logs'][hostname] = int(time.time())
+            else:
+                # Fallback: try to guess hostname from ID or ignore
+                # ID format: hostname-dev-x
+                # This is weak, but better than nothing if client is old
+                pass
             
             # Persist data
             save_data()
