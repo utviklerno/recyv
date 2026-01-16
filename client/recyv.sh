@@ -87,12 +87,16 @@ except Exception as e:
     if [ -z "$PAYLOAD" ]; then continue; fi
 
     # Send data via SSH
-    # We pipe payload into ssh
-    # -o StrictHostKeyChecking=no: Avoid interactive prompts in cron (Note: In production, better to manage known_hosts)
-    # -i: Identity file
-    echo "$PAYLOAD" | ssh -i "$ID_FILE" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SSH_TARGET > /dev/null 2>&1
+    # Debug mode if interactive
+    if [ -t 1 ]; then
+        echo "$PAYLOAD" | ssh -v -i "$ID_FILE" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SSH_TARGET
+        SSH_EXIT=$?
+    else
+        # Silent mode for cron
+        echo "$PAYLOAD" | ssh -i "$ID_FILE" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SSH_TARGET > /dev/null 2>&1
+        SSH_EXIT=$?
+    fi
     
-    SSH_EXIT=$?
     if [ $SSH_EXIT -eq 0 ]; then
         echo "Sent $ID"
     else
