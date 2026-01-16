@@ -1,4 +1,5 @@
-# Recyv Disk Monitor
+# Recyv - Disk Monitor
+Super light weight disk monitor.
 
 ![Recyv Dashboard](recyvdash.png)
 
