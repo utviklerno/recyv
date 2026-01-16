@@ -50,7 +50,7 @@ echo "SSH Port:   2222"
 echo "API Key:    ${API_KEY:-secretpassword} (Internal Use)"
 echo "--------------------------------------------------"
 echo "CLIENT PRIVATE KEY (Copy this for client install):"
-echo "This file can be found in /keys "
+echo "This file can be found in keys/client_key"
 echo ""
 cat "$KEY_DIR/client_key"
 echo ""
@@ -59,6 +59,11 @@ echo ""
 
 # Start SSHD
 /usr/sbin/sshd -D -e -p 2222 &
+
+# Export API_KEY for the SSH script
+echo "export API_KEY='${API_KEY:-secretpassword}'" > /app/env.sh
+chmod 644 /app/env.sh
+chown recyv:recyv /app/env.sh
 
 # Start App
 exec python app.py

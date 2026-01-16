@@ -1,5 +1,10 @@
 #!/bin/sh
 
+# Source environment variables (API_KEY)
+if [ -f /app/env.sh ]; then
+    . /app/env.sh
+fi
+
 # Read JSON from stdin
 DATA=$(cat)
 
@@ -10,7 +15,7 @@ if [ -z "$DATA" ]; then
 fi
 
 # Send to local API
-# We use the internal API_KEY which will be set in environment variables
+# We use the internal API_KEY which was sourced from env.sh
 RESPONSE=$(curl -s -w "\n%{http_code}" -X POST http://localhost:8080/api/upload \
     -H "Content-Type: application/json" \
     -H "X-API-Key: $API_KEY" \
