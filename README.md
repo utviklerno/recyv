@@ -29,33 +29,20 @@ The dashboard will be available at `http://localhost:8080`.
 ### Data Persistence
 The server stores disk data in JSON format in the `./data` directory on the host machine. This ensures data is preserved even if the container is recreated.
 
-## Client Installation
-
-To install the monitoring client on a Linux host:
-
-1.  **Run the installer via curl:**
-
+3.  **Client Installation**
+    
+    On the client machine (the host you want to monitor):
     ```bash
     curl -sL https://raw.githubusercontent.com/utviklerno/recyv/main/client/install.sh | sudo bash
     ```
-
-    *Note: Replace `utviklerno` with your actual GitHub username.*
-
-2.  **Configure the client:**
     
-    Edit the installed script to point to your server:
-    ```bash
-    sudo nano /root/diskmon.sh
-    ```
-    Update `API_URL` and `API_KEY`.
+    The script will:
+    1.  Install dependencies.
+    2.  Ask for your **Server URL** and **API Key**.
+    3.  Test the connection to the server.
+    4.  Configure the client script.
+    5.  Automatically set up a cron job to monitor all drives every minute.
 
-3.  **Enable Monitoring:**
-    
-    Run the script with the cron install flag to auto-detect drives and set up the schedule:
-    ```bash
-    sudo /root/diskmon.sh --install-cron
-    ```
-    This will set up a cron job to run every minute.
 
 ## API Usage
 
