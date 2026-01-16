@@ -1,0 +1,21 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.env
+.DS_Store
+.coverage
+htmlcov/
+dist/
+build/
+develop-eggs/
+eggs/
+parts/
+var/
+sdist/
+*.egg-info/
+.installed.cfg
+*.egg
+# Ignore data directory contents (except the .gitignore we created inside it)
+# But since we have a specific .gitignore inside data/, we don't strictly need to list it here if that one handles it.
+# However, usually good to be explicit.
