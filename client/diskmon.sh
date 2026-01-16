@@ -6,6 +6,21 @@ API_URL="http://localhost:8080/api/upload"
 # Password/Token defined in the docker-compose file
 API_KEY="secretpassword"
 
+# Handle --install-cron
+if [ "$1" == "--install-cron" ]; then
+    echo "Setting up cron job..."
+    CRON_CMD="* * * * * /root/diskmon.sh > /dev/null 2>&1"
+    
+    # Check if exists
+    if crontab -l 2>/dev/null | grep -qF "/root/diskmon.sh"; then
+        echo "Cron job already exists."
+    else
+        (crontab -l 2>/dev/null; echo "$CRON_CMD") | crontab -
+        echo "Cron job added: $CRON_CMD"
+    fi
+    exit 0
+fi
+
 # Check for dependencies
 if ! command -v smartctl &> /dev/null; then
     echo "Error: smartctl is not installed. Please install smartmontools."
@@ -20,8 +35,31 @@ fi
 # Get hostname
 HOSTNAME=$(hostname)
 
-# Loop through arguments (devices)
-for DEVICE in "$@"
+# Determine devices
+DEVICES=()
+
+if [ "$#" -gt 0 ]; then
+    DEVICES=("$@")
+else
+    # Auto-detect devices if no arguments provided
+    # Look for /dev/sd* and /dev/nvme*n*
+    # We want base devices like sda, sdb, nvme0n1 (not partitions)
+    
+    # Method 1: ls globbing (Simple)
+    for dev in /dev/sd[a-z] /dev/nvme[0-9]n[1-9]; do
+        [ -e "$dev" ] && DEVICES+=("$dev")
+    done
+    
+    if [ ${#DEVICES[@]} -eq 0 ]; then
+        echo "No devices specified and none detected automatically."
+        echo "Usage: $0 [device1] [device2] ..."
+        exit 1
+    fi
+    # echo "Auto-detected devices: ${DEVICES[*]}"
+fi
+
+# Loop through devices
+for DEVICE in "${DEVICES[@]}"
 do
     # Check if device exists
     if [ ! -e "$DEVICE" ]; then

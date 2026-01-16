@@ -48,14 +48,11 @@ To install the monitoring client on a Linux host:
 
 3.  **Enable Monitoring:**
     
-    Add a cron job to run the check every minute:
+    Run the script with the cron install flag to auto-detect drives and set up the schedule:
     ```bash
-    sudo crontab -e
+    sudo /root/diskmon.sh --install-cron
     ```
-    Add the following line (adjusting for your specific drives):
-    ```cron
-    * * * * * /root/diskmon.sh /dev/sda /dev/sdb
-    ```
+    This will set up a cron job to run every minute.
 
 ## API Usage
 
